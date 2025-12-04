@@ -17,5 +17,24 @@ export interface IImportMap {
 };
 
 export interface IPrefixMap {
-  [key: string]: string;
+  [key: string]: INameSpaceInfo;
 }
+
+export interface ILoadMap {
+  [key: string]: IEagerLoadInfo;
+}
+
+export interface INameSpaceInfo {
+  prefix: string;
+  loaderKey: string | null;
+}
+
+export interface IEagerLoadInfo {
+  tagName: string;
+  loaderKey: string | null;
+  extends: string | null;
+}
+
+export type IKeyInfo =
+  | (INameSpaceInfo & { isNameSpaced: true })
+  | (IEagerLoadInfo & { isNameSpaced: false });
