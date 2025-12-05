@@ -1,6 +1,6 @@
 
-import { IConfig } from "./types"
-import { load } from "./webc"
+import { IConfig } from "./types.js"
+import { load } from "./webc.js"
 
 export const DEFAULT_KEY = "*";
 
@@ -14,8 +14,8 @@ export const WEBC_LOADER = {
 export const DEFAULT_CONFIG: IConfig = {
   scanImportmap: true,
   loaders: {
-    WEBC_KEY: WEBC_LOADER,
-    DEFAULT_KEY: WEBC_KEY
+    [WEBC_KEY]: WEBC_LOADER,
+    [DEFAULT_KEY]: WEBC_KEY
   },
   observable: true
 }

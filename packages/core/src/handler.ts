@@ -1,6 +1,6 @@
-import { buildMap, loadImportmap } from "./importmap";
-import { DEFAULT_CONFIG as config } from "./config";
-import { eagerLoad, lazyLoad } from "./autoload";
+import { buildMap, loadImportmap } from "./importmap.js";
+import { DEFAULT_CONFIG as config } from "./config.js";
+import { eagerLoad, lazyLoad } from "./autoload.js";
 
 export async function registerHandler(): Promise<void> {
   const importmap = loadImportmap(); // 事前に importmap を読み込んでおく
@@ -8,16 +8,12 @@ export async function registerHandler(): Promise<void> {
     return;
   }
   const { prefixMap, loadMap } = buildMap(importmap);
-  try {
-    await eagerLoad(loadMap, config.loaders);
-  } catch(e) {
-    throw new Error("Failed to eager load components: " + e);
-  }
+  // 先にeager loadを実行すると、DOMContentLoadedイベントが発生しないことがあるため、後に実行する
 
-  if (Object.keys(prefixMap).length === 0) {
-    return;
-  }
   document.addEventListener("DOMContentLoaded", async (): Promise<void> => {
+    if (Object.keys(prefixMap).length === 0) {
+      return;
+    }
     try {
       await lazyLoad(document, prefixMap, config.loaders);
     } catch(e) {
@@ -36,5 +32,11 @@ export async function registerHandler(): Promise<void> {
     });
     mo.observe(document.documentElement, { childList: true, subtree: true });
   });
+
+  try {
+    await eagerLoad(loadMap, config.loaders);
+  } catch(e) {
+    throw new Error("Failed to eager load components: " + e);
+  }
 }
 

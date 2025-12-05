@@ -1,5 +1,5 @@
-import { DEFAULT_KEY } from "./config";
-import { IEagerLoadInfo, ILoader, INameSpaceInfo, IPrefixMap, ITagInfo } from "./types";
+import { DEFAULT_KEY } from "./config.js";
+import { IEagerLoadInfo, ILoader, INameSpaceInfo, IPrefixMap, ITagInfo } from "./types.js";
 
 const failedTags = new Set<string>();
 const loadingTags = new Set<string>();
@@ -59,8 +59,11 @@ export async function lazyLoad(
       throw new Error("No matching namespace found for lazy loaded component: " + name);
     }
     let loader: ILoader | string;
-    if (info.loaderKey === null || info.loaderKey === DEFAULT_KEY) {
+    if (info.loaderKey === null || info.loaderKey === DEFAULT_KEY || info.loaderKey === "") {
       loader = loaders[DEFAULT_KEY];
+      if (typeof loader === "string") {
+        loader = loaders[loader];
+      }
     } else {
       loader = loaders[info.loaderKey];
     }
@@ -68,7 +71,12 @@ export async function lazyLoad(
       throw new Error("Loader redirection is not supported for eager loaded components: " + tagName);
     }
     loadingTags.add(name);
-    const path = info.key + loader.postfix;
+
+    let file: string = name.slice(info.prefix.length + 1);
+    if (file === "") {
+      throw new Error("Invalid component name for lazy loaded component: " + name);
+    }
+    const path = info.key + file + loader.postfix;
     try {
       const componentConstructor = await loader.loader(path);
       if (componentConstructor !== null) {
@@ -95,8 +103,11 @@ export async function eagerLoad(
 ): Promise<void> {
   for(const [tagName, info] of Object.entries(loadMap)) {
     let loader: ILoader | string;
-    if (info.loaderKey === null || info.loaderKey === DEFAULT_KEY) {
+    if (info.loaderKey === null || info.loaderKey === DEFAULT_KEY || info.loaderKey === "") {
       loader = loaders[DEFAULT_KEY];
+      if (typeof loader === "string") {
+        loader = loaders[loader];
+      }
     } else {
       loader = loaders[info.loaderKey];
     }

@@ -1,4 +1,4 @@
-import { IImportMap, IKeyInfo, ILoadMap, IPrefixMap } from "./types";
+import { IImportMap, IKeyInfo, ILoadMap, IPrefixMap } from "./types.js";
 
 const COMPONENT_KEYWORD = "@components/";
 
