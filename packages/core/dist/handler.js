@@ -7,6 +7,7 @@ export async function registerHandler() {
         return;
     }
     const { prefixMap, loadMap } = buildMap(importmap);
+    // 先にeager loadを実行すると、DOMContentLoadedイベントが発生しないことがあるため、後に実行する
     document.addEventListener("DOMContentLoaded", async () => {
         if (Object.keys(prefixMap).length === 0) {
             return;

@@ -11,7 +11,7 @@ export const WEBC_LOADER = {
   loader: load
 }
 
-export const DEFAULT_CONFIG: IConfig = {
+const DEFAULT_CONFIG: IConfig = {
   scanImportmap: true,
   loaders: {
     [WEBC_KEY]: WEBC_LOADER,
@@ -19,3 +19,5 @@ export const DEFAULT_CONFIG: IConfig = {
   },
   observable: true
 }
+
+export const config = DEFAULT_CONFIG;

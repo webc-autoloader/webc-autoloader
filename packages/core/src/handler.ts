@@ -1,5 +1,5 @@
 import { buildMap, loadImportmap } from "./importmap.js";
-import { DEFAULT_CONFIG as config } from "./config.js";
+import { config } from "./config.js";
 import { eagerLoad, lazyLoad } from "./autoload.js";
 
 export async function registerHandler(): Promise<void> {
